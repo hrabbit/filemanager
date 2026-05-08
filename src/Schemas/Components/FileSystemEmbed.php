@@ -68,6 +68,26 @@ class FileSystemEmbed extends Livewire
         ];
     }
 
+    public function modifyQueryUsing(?Closure $callback): static
+    {
+        $this->modifyQueryUsing = $callback;
+
+        return $this;
+    }
+    
+    /**
+     * @template TModel of Model
+     *
+     * @param  Builder<TModel>  $query
+     * @return Builder<TModel>
+     */
+    public function modifyQuery(Builder $query): Builder
+    {
+        return $this->evaluate($this->modifyQueryUsing, [
+            'query' => $query,
+        ]) ?? $query;
+    }
+
     /**
      * Set the height of the embedded file system browser.
      */

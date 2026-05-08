@@ -5,6 +5,8 @@ namespace MWGuerra\FileManager\Schemas\Components;
 use Closure;
 use Filament\Schemas\Components\Livewire;
 use MWGuerra\FileManager\Livewire\EmbeddedFileManager;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Model;
 
 /**
  * Embeddable File Manager component for use in Filament schemas/forms.
@@ -33,6 +35,8 @@ class FileManagerEmbed extends Livewire
     protected string|Closure $sidebarHeading = 'Folders';
 
     protected string|Closure $breadcrumbsRootLabel = 'Root';
+
+    protected ?Closure $modifyQueryUsing = null;
 
     public static function make(Closure|string|null $component = null, Closure|array $data = []): static
     {
@@ -65,8 +69,30 @@ class FileManagerEmbed extends Livewire
             'sidebarRootLabel' => $this->getSidebarRootLabel(),
             'sidebarHeading' => $this->getSidebarHeading(),
             'breadcrumbsRootLabel' => $this->getBreadcrumbsRootLabel(),
+            'modifyQueryUsing' => $this->modifyQueryUsing,
         ];
     }
+
+
+    public function modifyQueryUsing(?Closure $callback): static
+    {
+        $this->modifyQueryUsing = $callback;
+
+        return $this;
+    }
+    
+    // /**
+    //  * @template TModel of Model
+    //  *
+    //  * @param  Builder<TModel>  $query
+    //  * @return Builder<TModel>
+    //  */
+    // public function modifyQuery(Builder $query): Builder
+    // {
+    //     return $this->evaluate($this->modifyQueryUsing, [
+    //         'query' => $query,
+    //     ]) ?? $query;
+    // }
 
     /**
      * Set the height of the embedded file manager.
